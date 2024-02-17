@@ -1,0 +1,22 @@
+<!-- views/dashboard.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Head content goes here -->
+</head>
+<body>
+  <h1>Welcome to the Dashboard, <%= user.username %>!</h1>
+
+  <!-- Other dashboard content goes here -->
+
+  <p>User ID: <%= user._id %></p>
+  <a href="/logout">Logout</a>
+
+  <!-- Add a link/button to navigate to the schedule page -->
+  <a href="/api/calendar">Manage Schedule</a>
+  
+  <!-- Your other dashboard content -->
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!-- views/schedule.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School/Work Schedule</title>
+
+  <!-- Add tui.calendar CSS -->
+  <link rel="stylesheet" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
+
+  <!-- Include jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Add tui.calendar JavaScript -->
+  <script>
+    // Include tui.calendar JavaScript only if window is defined (i.e., if running in a browser)
+    if (typeof window !== 'undefined') {
+      document.write('<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"><\/script>');
+      document.write('<link rel="stylesheet" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css">');
+    }
+  </script>
+</head>
+<body>
+  <h1>School/Work Schedule</h1>
+
+  <!-- Calendar container -->
+  <div id="calendar" style="height: 800px"></div>
+
+  <!-- Include your other scripts here -->
+
+  <!-- Include tui.calendar initialization script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Initialize the calendar here
+      const calendar = new tui.Calendar(document.getElementById('calendar'), {
+        // Add options as needed
+        defaultView: 'week',
+        template: {
+          time(event) {
+            const { start, end, title } = event;
+            return `<span style="color: white;">${formatTime(start)}~${formatTime(end)} ${title}</span>`;
+          },
+          allday(event) {
+            return `<span style="color: gray;">${event.title}</span>`;
+          },
+        },
+        calendars: [
+          {
+            id: 'cal1',
+            name: 'Personal',
+            backgroundColor: '#03bd9e',
+          },
+          {
+            id: 'cal2',
+            name: 'Work',
+            backgroundColor: '#00a9ff',
+          },
+        ],
+      });
+
+      // Fetch and set calendar data from the server
+      $.ajax({
+        url: '/api/calendar', // Update the URL to your API endpoint
+        method: 'GET',
+        success: function (data) {
+          calendar.createSchedules(data);
+        },
+        error: function (error) {
+          console.error('Error fetching calendar events:', error);
+        }
+      });
+    });
+  </script>
+
+  <!-- Include other scripts or links as needed -->
+
+  <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>
