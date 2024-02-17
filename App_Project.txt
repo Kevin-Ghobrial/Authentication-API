@@ -1,0 +1,55 @@
+// Sample code for handling user authentication using Passport.js
+const express = require('express');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('./models/user');
+
+const app = express();
+
+app.use(require('express-session')({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Your routes for authentication (signup, login, logout) would go here
+
+// Sample code for handling schedule input
+app.post('/api/schedule', (req, res) => {
+  const userId = req.user._id; // Assuming you have a user object after authentication
+  const scheduleData = req.body.schedule; // Assuming the schedule data is sent in the request body
+
+  // Save schedule data to the database
+  User.findByIdAndUpdate(userId, { schedule: scheduleData }, (err, user) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.status(200).send('Schedule updated successfully');
+    }
+  });
+});
+
+// Sample code for handling hobby input
+app.post('/api/hobbies', (req, res) => {
+  const userId = req.user._id;
+  const hobbiesData = req.body.hobbies;
+
+  // Save hobbies data to the database
+  User.findByIdAndUpdate(userId, { hobbies: hobbiesData }, (err, user) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.status(200).send('Hobbies updated successfully');
+    }
+  });
+});
+
+// Similar routes can be created for food times, AI optimization, and achievements
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
